@@ -10,19 +10,42 @@ REM  Tables and sample products are created by the app on first start.
 REM ============================================================
 
 REM --- Load settings: defaults first, then local overrides ---
+set "psql.path="
 call :load config\app.default.properties
 if exist config\app.properties call :load config\app.properties
 
-REM --- Find psql: PATH first, then C:\Program Files\PostgreSQL\<version>\bin ---
+REM --- Find psql. Order of search:
+REM       1. psql.path in the config files
+REM       2. PATH
+REM       3. PostgreSQL install info in the registry (works for any install folder)
+REM       4. C:\Program Files\PostgreSQL\<version>\bin
 set "PSQL="
-where psql >nul 2>&1 && set "PSQL=psql"
+if defined psql.path (
+    if exist "%psql.path%" (
+        set "PSQL=%psql.path%"
+    ) else (
+        echo [ERROR] psql.path in the config file does not exist: %psql.path%
+        exit /b 1
+    )
+)
+if not defined PSQL where psql >nul 2>&1 && set "PSQL=psql"
+if not defined PSQL (
+    for /f "tokens=3*" %%a in ('reg query "HKLM\SOFTWARE\PostgreSQL\Installations" /s /v "Base Directory" 2^>nul ^| findstr /c:"REG_SZ"') do (
+        if exist "%%b\bin\psql.exe" set "PSQL=%%b\bin\psql.exe"
+    )
+)
 if not defined PSQL (
     for /d %%d in ("%ProgramFiles%\PostgreSQL\*") do if exist "%%d\bin\psql.exe" set "PSQL=%%d\bin\psql.exe"
 )
 if not defined PSQL (
-    echo [ERROR] psql not found. Install PostgreSQL first.
+    echo [ERROR] psql not found.
+    echo         Checked: psql.path in config, PATH, the registry, and %ProgramFiles%\PostgreSQL\
+    echo         - If PostgreSQL is installed, find psql.exe in its "bin" folder and set it in config\app.properties, for example:
+    echo               psql.path=D:\PostgreSQL\18\bin\psql.exe
+    echo         - If psql.exe does not exist, re-run the PostgreSQL installer and select "Command Line Tools".
     exit /b 1
 )
+echo Using psql: %PSQL%
 
 REM Pass the password by environment variable so psql does not prompt for it
 set "PGPASSWORD=%db.password%"

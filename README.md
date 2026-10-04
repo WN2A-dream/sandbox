@@ -47,10 +47,29 @@ Java 拡張機能（Extension Pack for Java）を入れて、`F5`（実行構成
 | 症状 | 対処 |
 |---|---|
 | `javac not found` | JDK 21 以上を入れて PATH に通す |
-| `psql not found` | PostgreSQL を入れる |
+| `psql not found` | 下の「psql が見つからないとき」を参照 |
 | `Cannot connect to PostgreSQL` | PostgreSQL が起動しているか確認。パスワードが違うなら「設定を変える」 |
 | `Address already in use` | すでに起動中。前回のサーバーを `Ctrl+C` で止めるか、ポートを変える |
 | `設定ファイルが見つかりません` | プロジェクトのルートフォルダで実行する |
+
+### psql が見つからないとき
+
+`setup-db.bat` は、次の順番で `psql.exe` を探します。
+
+1. `config/app.properties` の `psql.path`
+2. PATH
+3. レジストリ（PostgreSQL のインストール情報。インストール先がどこでも見つかる）
+4. `C:\Program Files\PostgreSQL\<バージョン>\bin`
+
+それでも見つからないときは、次のどちらかです。
+
+- **別の場所にある**: PostgreSQL の `bin` フォルダから `psql.exe` を探し、`config/app.properties` に書く。
+  ```
+  psql.path=D:\PostgreSQL\18\bin\psql.exe
+  ```
+- **psql.exe が無い**: インストール時に「Command Line Tools」を外している。インストーラをもう一度実行して追加する。
+
+pgAdmin など別のツールで `shop` データベースを作っても構いません。その場合は `setup-db.bat` は不要で、`.\run.bat` から始められます。
 
 ## 設定を変える
 
@@ -81,6 +100,7 @@ server.port=3000
 | `db.user` | `postgres` | ユーザー名 |
 | `db.password` | `postgres` | パスワード |
 | `server.port` | `8080` | このアプリのポート |
+| `psql.path` | （未設定） | `setup-db.bat` 専用。`psql.exe` が自動で見つからないときだけ指定 |
 
 `setup-db.bat` と `run.bat` は、どちらも同じ設定ファイルを読みます。
 
