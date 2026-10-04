@@ -1,2 +1,5 @@
 target/
 bin/
+out/
+lib/
+config/app.properties

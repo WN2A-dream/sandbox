@@ -23,12 +23,10 @@ import java.util.concurrent.Executors;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        // --- 設定（環境変数で上書き可能） ---
-        Db db = new Db(
-                env("DB_URL", "jdbc:postgresql://localhost:5432/shop"),
-                env("DB_USER", "postgres"),
-                env("DB_PASSWORD", "postgres"));
-        int port = Integer.parseInt(env("PORT", "8080"));
+        // --- 設定（config/app.default.properties と config/app.properties） ---
+        Config config = Config.load();
+        Db db = new Db(config.dbUrl(), config.dbUser(), config.dbPassword());
+        int port = config.serverPort();
 
         db.initSchema();
 
@@ -58,11 +56,5 @@ public class Main {
         server.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
         server.start();
         System.out.println("http://localhost:" + port + "/");
-    }
-
-    /** 環境変数を読む。未設定または空なら既定値を返す。 */
-    private static String env(String key, String defaultValue) {
-        String v = System.getenv(key);
-        return v == null || v.isEmpty() ? defaultValue : v;
     }
 }

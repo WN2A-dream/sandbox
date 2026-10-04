@@ -2,11 +2,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            // 実行前の準備: ソースをコンパイルし(schema.sqlも target/classes にコピーされる)、
-            // 依存jar(PostgreSQLドライバ)を target/dependency にコピーする
-            "label": "mvn: prepare",
+            // 実行前の準備: build.bat でコンパイルし(schema.sqlも out/classes にコピーされる)、
+            // 初回はPostgreSQLドライバを lib にダウンロードする。Mavenは不要
+            "label": "build",
             "type": "shell",
-            "command": "mvn -q compile dependency:copy-dependencies",
+            "command": "cmd /c build.bat",
             "problemMatcher": [],
             "group": "build"
         }
