@@ -18,3 +18,23 @@ Java + PostgreSQL の最小ECサイト (商品一覧 / 詳細 / 検索 / カー�
 | `DB_USER` | `postgres` |
 | `DB_PASSWORD` | `postgres` |
 | `PORT` | `8080` |
+
+## 構成 (MVC)
+
+```
+shop/Main                 起動と配線のみ
+shop/web/*                Router, Request, Response, HttpException (HTTPの入出力)
+shop/controller/*         リクエストを受けてRepositoryとViewを呼ぶ
+shop/model/*              Product, CartLine, Order (データの型)
+shop/repository/*         SQLはここだけ
+shop/view/*               HTMLはここだけ
+```
+
+| URL | 内容 |
+|---|---|
+| `GET /` , `GET /?q=` | 商品一覧・検索 |
+| `GET /product?id=` | 商品詳細 |
+| `GET /cart` | カート |
+| `POST /cart/add` , `POST /cart/remove` | カートの追加・削除 |
+| `POST /checkout` | 注文確定 |
+| `GET /orders` | 注文履歴 |
