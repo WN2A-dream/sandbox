@@ -1,18 +1,20 @@
-## Getting Started
+# Mini Shop
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Java + PostgreSQL の最小ECサイト (商品一覧 / 詳細 / 検索 / カート / 注文)。
 
-## Folder Structure
+## 起動
 
-The workspace contains two folders by default, where:
+1. PostgreSQL を起動し、DB を作成: `CREATE DATABASE shop;`
+2. `mvn compile exec:java`
+3. http://localhost:8080/ を開く
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+テーブルとサンプル商品は起動時に自動作成されます。
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## 設定 (環境変数)
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+| 変数 | 既定値 |
+|---|---|
+| `DB_URL` | `jdbc:postgresql://localhost:5432/shop` |
+| `DB_USER` | `postgres` |
+| `DB_PASSWORD` | `postgres` |
+| `PORT` | `8080` |
