@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            // F5 または「Run」で Mini Shop を起動する。http://localhost:8080/
+            "type": "java",
+            "name": "Mini Shop",
+            "request": "launch",
+            "mainClass": "shop.Main",
+            "preLaunchTask": "mvn: prepare",
+            "classPaths": [
+                "${workspaceFolder}/target/classes",
+                "${workspaceFolder}/target/dependency/postgresql-42.7.4.jar"
+            ],
+            "console": "integratedTerminal",
+            // DB接続先などを変えたいときはここで指定する（未指定なら既定値）
+            "env": {
+                "DB_URL": "jdbc:postgresql://localhost:5432/shop",
+                "DB_USER": "postgres",
+                "DB_PASSWORD": "postgres",
+                "PORT": "8080"
+            }
+        }
+    ]
+}

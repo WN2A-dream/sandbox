@@ -1,0 +1,14 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // 実行前の準備: ソースをコンパイルし(schema.sqlも target/classes にコピーされる)、
+            // 依存jar(PostgreSQLドライバ)を target/dependency にコピーする
+            "label": "mvn: prepare",
+            "type": "shell",
+            "command": "mvn -q compile dependency:copy-dependencies",
+            "problemMatcher": [],
+            "group": "build"
+        }
+    ]
+}
